@@ -1,47 +1,51 @@
 #云编译公用核心
-name: OWRT-COR
+name: OpenWrt-Build
+
 #CI权限
 permissions: write-all
+
 on:
   schedule:
-    - cron: 0 20 * * *
+  #UTC时区 北京时间为UTC+8
+  #自动编译：每天24点(北京时间)
+  - cron: '0 16 * * *'
   #手动编译
   workflow_dispatch:
   #公用核心标识
   workflow_call:
     inputs:
-      OWRT_TARGET:
+      OpenWrt_TARGET:
         required: true
         type: string
-      OWRT_THEME:
+      OpenWrt_THEME:
         required: true
         type: string
-      OWRT_NAME:
+      OpenWrt_NAME:
         required: true
         type: string
-      OWRT_URL:
+      OpenWrt_URL:
         required: true
         type: string
-      OWRT_PW:
+      OpenWrt_PW:
         required: true
         type: string
-      OWRT_IP:
+      OpenWrt_IP:
         required: true
         type: string
 env:
-
- GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-  OWRT_TARGET: Rockchip
+      GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      #编译平台
+      OpenWrt_TARGET: Rockchip
       #默认主题
-      OWRT_THEME: argon
+      OpenWrt_THEME: argon
       #默认主机名
-      OWRT_NAME: OWRT
+      OpenWrt_NAME: 狗鹏
       #默认密码，仅作展示，请勿乱改
-      OWRT_PW: 无
+      OpenWrt_PW: password
       #默认地址
-      OWRT_IP: 192.168.10.1
+      OpenWrt_IP: 192.168.1.1
       #默认源码
-      OWRT_URL: https://github.com/immortalwrt/immortalwrt.git
+      OpenWrt_URL: https://github.com/coolsnowwolf/lede
 
 jobs:
   owrt_core:

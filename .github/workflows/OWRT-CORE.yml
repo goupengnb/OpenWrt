@@ -1,51 +1,38 @@
 #云编译公用核心
-name: OpenWrt-Build
-
-#CI权限
-permissions: write-all
+name: OWRT-CORE
 
 on:
-  schedule:
-  #UTC时区 北京时间为UTC+8
-  #自动编译：每天24点(北京时间)
-  - cron: '0 16 * * *'
-  #手动编译
-  workflow_dispatch:
   #公用核心标识
   workflow_call:
     inputs:
-      OpenWrt_TARGET:
+      OWRT_TARGET:
         required: true
         type: string
-      OpenWrt_THEME:
+      OWRT_THEME:
         required: true
         type: string
-      OpenWrt_NAME:
+      OWRT_NAME:
         required: true
         type: string
-      OpenWrt_URL:
+      OWRT_URL:
         required: true
         type: string
-      OpenWrt_PW:
+      OWRT_PW:
         required: true
         type: string
-      OpenWrt_IP:
+      OWRT_IP:
         required: true
         type: string
+
 env:
-      GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-      #编译平台
-      OpenWrt_TARGET: Rockchip
-      #默认主题
-      OpenWrt_THEME: argon
-      #默认主机名
-      OpenWrt_NAME: 狗鹏
-      #默认密码，仅作展示，请勿乱改
-      OpenWrt_PW: password
-      #默认地址
-      OpenWrt_IP: 192.168.1.1
-      #默认源码
-      OpenWrt_URL: https://github.com/coolsnowwolf/lede
+  GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+  OWRT_TARGET: ${{inputs.OWRT_TARGET}}
+  OWRT_THEME: ${{inputs.OWRT_THEME}}
+  OWRT_NAME: ${{inputs.OWRT_NAME}}
+  OWRT_URL: ${{inputs.OWRT_URL}}
+  OWRT_PW: ${{inputs.OWRT_PW}}
+  OWRT_IP: ${{inputs.OWRT_IP}}
+
 jobs:
   owrt_core:
     runs-on: ubuntu-latest

@@ -1,16 +1,7 @@
 #云编译公用核心
 name: OWRT-CORE
 
-#CI权限
-permissions: write-all
-
 on:
-  schedule:
-  #UTC时区 北京时间为UTC+8
-  #自动编译：每天24点(北京时间)
-  - cron: '0 16 * * *'
-  #手动编译
-  workflow_dispatch:
   #公用核心标识
   workflow_call:
     inputs:
@@ -34,21 +25,13 @@ on:
         type: string
 
 env:
- GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
- #编译平台
- OWRT_TARGET: Rockchip
- #默认主题
- OWRT_THEME: argon
- #默认主机名
- OWRT_NAME: OWRT
- #默认密码，仅作展示，请勿乱改
- OWRT_PW: 无
- #默认地址
- OWRT_IP: 192.168.10.1
- #添加软件源 
- OpenWrt_PlUGINS: https://github.com/haiibo/openwrt-packages
- #默认源码
- OWRT_URL: https://github.com/immortalwrt/immortalwrt.git
+  GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+  OWRT_TARGET: ${{inputs.OWRT_TARGET}}
+  OWRT_THEME: ${{inputs.OWRT_THEME}}
+  OWRT_NAME: ${{inputs.OWRT_NAME}}
+  OWRT_URL: ${{inputs.OWRT_URL}}
+  OWRT_PW: ${{inputs.OWRT_PW}}
+  OWRT_IP: ${{inputs.OWRT_IP}}
 
 jobs:
   owrt_core:
@@ -74,7 +57,7 @@ jobs:
         run: |
           sudo -E apt -yqq update
           sudo -E apt -yqq full-upgrade
-          sudo -E apt -yqq install $(sed "{s/\r$//g;p;q}" $GITHUB_WORKSPACE/Config/Depends.txt)
+          sudo -E apt -yqq install $(sed "{s/\r$//g;p;q}" $GITHUB_WORKSPACE/Depends.txt)
           sudo -E apt -yqq autoremove --purge
           sudo -E apt -yqq autoclean
           sudo -E apt -yqq clean
@@ -106,7 +89,7 @@ jobs:
       - name: Update Feeds
         run: |
           cd ./owrt
-          echo "src-git Plugins $OpenWrt_PlUGINS" >> feeds.conf.default
+
           ./scripts/feeds update -a
           ./scripts/feeds install -a
 
@@ -115,6 +98,10 @@ jobs:
           cd ./owrt
 
           $GITHUB_WORKSPACE/Scripts/Settings.sh
+
+          cd ./package
+
+          $GITHUB_WORKSPACE/Scripts/Plugins.sh
 
       - name: Custom Settings
         run: |

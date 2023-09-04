@@ -14,22 +14,22 @@ on:
   #公用核心标识
   workflow_call:
     inputs:
-      OpenWrt_TARGET:
+      OWRT_TARGET:
         required: true
         type: string
-      OpenWrt_THEME:
+      OWRT_THEME:
         required: true
         type: string
-      OpenWrt_NAME:
+      OWRT_NAME:
         required: true
         type: string
-      OpenWrt_URL:
+      OWRT_URL:
         required: true
         type: string
-      OpenWrt_PW:
+      OWRT_PW:
         required: true
         type: string
-      OpenWrt_IP:
+      OWRT_IP:
         required: true
         type: string
 env:

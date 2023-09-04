@@ -29,8 +29,8 @@ on:
       OWRT_IP:
         required: true
         type: string
-
 env:
+
  GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
   OWRT_TARGET: Rockchip
       #默认主题

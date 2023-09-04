@@ -32,12 +32,6 @@ on:
 
 env:
 GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-
-
-#CI任务
-jobs:
-  owrt_config:
-    with:
       #编译平台
       OWRT_TARGET: Rockchip
       #默认主题

@@ -9,6 +9,9 @@ sed -i "s/hostname='.*'/hostname='$OpenWrt_NAME'/g" ./package/base-files/files/b
 #修改默认时区
 sed -i "s/timezone='.*'/timezone='CST-8'/g" ./package/base-files/files/bin/config_generate
 sed -i "/timezone='.*'/a\\\t\t\set system.@system[-1].zonename='Asia/Shanghai'" ./package/base-files/files/bin/config_generate
+#修改R5C leds配置
+sed -i '/r5c/{n;n;n;i \    ucidef_set_led_netdev "wlan" "WLAN" "green:wlan" "wlan0"
+}' target/linux/rockchip/armv8/base-files/etc/board.d/01_leds
 #首次开机后重启
 sed -i "3i\sleep 100 && reboot\nsed -i \'3,4d\' /etc/rc.local" ./package/base-files/files/etc/rc.local
 #编译6.1内核

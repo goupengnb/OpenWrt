@@ -14,41 +14,41 @@ on:
   #公用核心标识
   workflow_call:
     inputs:
-      OWRT_TARGET:
+      OpenWrt_TARGET:
         required: true
         type: string
-      OWRT_THEME:
+      OpenWrt_THEME:
         required: true
         type: string
-      OWRT_NAME:
+      OpenWrt_NAME:
         required: true
         type: string
-      OWRT_URL:
+      OpenWrt_URL:
         required: true
         type: string
-      OWRT_PW:
+      OpenWrt_PW:
         required: true
         type: string
-      OWRT_IP:
+      OpenWrt_IP:
         required: true
         type: string
 env:
       #编译平台
-      OWRT_TARGET: Rockchip
+      OpenWrt_TARGET: Rockchip
       #默认主题
-      OWRT_THEME: argon
+      OpenWrt_THEME: argon
       #默认主机名
-      OWRT_NAME: 狗鹏
+      OpenWrt_NAME: 狗鹏
       #默认密码，仅作展示，请勿乱改
-      OWRT_PW: 无
+      OpenWrt_PW: 无
       #默认地址
-      OWRT_IP: 192.168.1.1
+      OpenWrt_IP: 192.168.1.1
       #默认源码
-      OWRT_URL: https://github.com/immortalwrt/immortalwrt.git
+      OpenWrt_URL: https://github.com/immortalwrt/immortalwrt.git
       GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
 jobs:
-  owrt_core:
+  OpenWrt_core:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Projects
@@ -80,36 +80,36 @@ jobs:
 
       - name: Initialization Values
         run: |
-          export OWRT_DATE=$(TZ=UTC-8 date +"%y.%m.%d_%H.%M.%S")
-          export OWRT_SOURCE=$(echo $OWRT_URL | cut -d '/' -f 5-)
-          export OWRT_TYPE=$(sed -n "1{s/^#//;s/\r$//;p;q}" $GITHUB_WORKSPACE/Config/$OWRT_TARGET.txt)
+          export OpenWrt_DATE=$(TZ=UTC-8 date +"%y.%m.%d_%H.%M.%S")
+          export OpenWrt_SOURCE=$(echo $OpenWrt_URL | cut -d '/' -f 5-)
+          export OpenWrt_TYPE=$(sed -n "1{s/^#//;s/\r$//;p;q}" $GITHUB_WORKSPACE/Config/$OpenWrt_TARGET.txt)
 
-          echo "OWRT_SOURCE=$OWRT_SOURCE" >> $GITHUB_ENV
-          echo "OWRT_TARGET=$OWRT_TARGET" >> $GITHUB_ENV
-          echo "OWRT_DATE=$OWRT_DATE" >> $GITHUB_ENV
-          echo "OWRT_TYPE=$OWRT_TYPE" >> $GITHUB_ENV
-          echo "OWRT_PW=$OWRT_PW" >> $GITHUB_ENV
-          echo "OWRT_IP=$OWRT_IP" >> $GITHUB_ENV
+          echo "OpenWrt_SOURCE=$OpenWrt_SOURCE" >> $GITHUB_ENV
+          echo "OpenWrt_TARGET=$OpenWrt_TARGET" >> $GITHUB_ENV
+          echo "OpenWrt_DATE=$OpenWrt_DATE" >> $GITHUB_ENV
+          echo "OpenWrt_TYPE=$OpenWrt_TYPE" >> $GITHUB_ENV
+          echo "OpenWrt_PW=$OpenWrt_PW" >> $GITHUB_ENV
+          echo "OpenWrt_IP=$OpenWrt_IP" >> $GITHUB_ENV
 
       - name: Check Files
         run: |
           dos2unix $(find ./ -maxdepth 2 -type f -iregex ".*\(txt\|sh\)$")
           chmod +x $(find ./ -maxdepth 2 -type f -iname "*.sh")
 
-      - name: Clone OWRT Code
+      - name: Clone OpenWrt Code
         run: |
-          git clone --depth=1 --single-branch $OWRT_URL ./owrt
+          git clone --depth=1 --single-branch $OpenWrt_URL ./OpenWrt
 
       - name: Update Feeds
         run: |
-          cd ./owrt
+          cd ./OpenWrt
 
           ./scripts/feeds update -a
           ./scripts/feeds install -a
 
       - name: Custom Scripts
         run: |
-          cd ./owrt
+          cd ./OpenWrt
 
           $GITHUB_WORKSPACE/Scripts/Settings.sh
 
@@ -119,10 +119,10 @@ jobs:
 
       - name: Custom Settings
         run: |
-          cd ./owrt
+          cd ./OpenWrt
 
           rm -rf ./tmp* ./.config*
-          cat $GITHUB_WORKSPACE/Config/$OWRT_TARGET.txt $GITHUB_WORKSPACE/Config/General.txt >> .config
+          cat $GITHUB_WORKSPACE/Config/$OpenWrt_TARGET.txt $GITHUB_WORKSPACE/Config/General.txt >> .config
 
           $GITHUB_WORKSPACE/Scripts/Extras.sh
 
@@ -130,19 +130,19 @@ jobs:
 
       - name: Cleanup Toolchain
         run: |
-          cd ./owrt
+          cd ./OpenWrt
 
           make dirclean
 
       - name: Download Packages
         run: |
-          cd ./owrt
+          cd ./OpenWrt
 
           make download -j$(nproc)
 
       - name: Compile Firmware
         run: |
-          cd ./owrt
+          cd ./OpenWrt
 
           make -j$(nproc) || make -j1 V=s
 
@@ -154,11 +154,11 @@ jobs:
 
       - name: Package Firmware
         run: |
-          cd ./owrt && mkdir ./upload
+          cd ./OpenWrt && mkdir ./upload
 
           rm -rf $(find ./bin/targets/ -iregex ".*\(json\|manifest\|buildinfo\|sha256sums\|packages\)$")
           cp -rf $(find ./bin/targets/ -type f -iname "*.*") ./upload/
-          cp -rf ./.config ./upload/Config_"$OWRT_TARGET"_"$OWRT_SOURCE"_"$OWRT_DATE".txt
+          cp -rf ./.config ./upload/Config_"$OpenWrt_TARGET"_"$OpenWrt_SOURCE"_"$OpenWrt_DATE".txt
 
           cd ./upload
 
@@ -167,18 +167,18 @@ jobs:
       - name: Release Firmware
         uses: softprops/action-gh-release@master
         with:
-          tag_name: ${{env.OWRT_TARGET}}_${{env.OWRT_SOURCE}}_${{env.OWRT_DATE}}
-          files: ./owrt/upload/*.*
+          tag_name: ${{env.OpenWrt_TARGET}}_${{env.OpenWrt_SOURCE}}_${{env.OpenWrt_DATE}}
+          files: ./OpenWrt/upload/*.*
           body: |
             这是个平台固件包，内含多个设备！
             请注意选择你需要的设备固件！
             不要问，更就完事了！
 
-            源码：${{env.OWRT_SOURCE}}
-            平台：${{env.OWRT_TARGET}}
-            设备：${{env.OWRT_TYPE}}
-            密码：${{env.OWRT_PW}}
-            地址：${{env.OWRT_IP}}
+            源码：${{env.OpenWrt_SOURCE}}
+            平台：${{env.OpenWrt_TARGET}}
+            设备：${{env.OpenWrt_TYPE}}
+            密码：${{env.OpenWrt_PW}}
+            地址：${{env.OpenWrt_IP}}
 
       - name: Delete Old Releases
         uses: dev-drprasad/delete-older-releases@master

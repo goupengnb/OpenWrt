@@ -19,7 +19,7 @@ sed -i 's/\/bin\/login/\/bin\/login -f root/' ./feeds/packages/utils/ttyd/files/
 sed -i '/r5c/{n;n;n;i \    ucidef_set_led_netdev "wlan" "WLAN" "green:wlan" "phy0-ap0"
 }' target/linux/rockchip/armv8/base-files/etc/board.d/01_leds
 #首次开机后重启
-#sed -i "3i\sleep 100 && reboot\nsed -i \'3,4d\' /etc/rc.local" ./package/base-files/files/etc/rc.local
+sed -i "3i\sleep 100 && reboot\nsed -i \'3,4d\' /etc/rc.local" ./package/base-files/files/etc/rc.local
 #编译6.1内核
 sed -i 's/5.15/6.1/g' ./target/linux/rockchip/Makefile
 #修改ssh登录信息

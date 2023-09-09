@@ -170,9 +170,6 @@ jobs:
           tag_name: ${{env.OpenWrt_TARGET}}_${{env.OpenWrt_SOURCE}}_${{env.OpenWrt_DATE}}
           files: ./OpenWrt/upload/*.*
           body: |
-            这是个平台固件包，内含多个设备！
-            请注意选择你需要的设备固件！
-            不要问，更就完事了！
 
             源码：${{env.OpenWrt_SOURCE}}
             平台：${{env.OpenWrt_TARGET}}

@@ -2,7 +2,7 @@
 云编译OpenWRT固件
 
 
-使用IMMORTALWRT源码 为OpenWrt最新源码
+使用IMMORTALWRT源码为OpenWrt最新源码
 
 # 固件简要说明：
 

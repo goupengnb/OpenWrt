@@ -1,8 +1,8 @@
 # OpenWrt-Build
-云编译OpenWRT固件
+云编译OpenWrt固件
 
 
-使用IMMORTALWRT源码为OpenWrt最新版本源码
+使用IMMORTALWRT源码 为OpenWrt最新版本源码
 
 # 固件简要说明：
 

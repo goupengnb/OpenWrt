@@ -1,4 +1,4 @@
-# OpenWRT-CI
+# OpenWrt-Build
 云编译OpenWRT固件
 
 
@@ -13,7 +13,7 @@
 
 # 目录简要说明：
 
-workflows——自定义CI配置
+workflows——自定义Build配置
 
 Scripts——自定义脚本
 

@@ -10,7 +10,7 @@ sed -i "s/hostname='.*'/hostname='$OpenWrt_NAME'/g" ./package/base-files/files/b
 sed -i "s/timezone='.*'/timezone='CST-8'/g" ./package/base-files/files/bin/config_generate
 sed -i "/timezone='.*'/a\\\t\t\set system.@system[-1].zonename='Asia/Shanghai'" ./package/base-files/files/bin/config_generate
 #修改无线名称
-sed -i 's/ssid=.*$/ssid=狗鹏/' package/kernel/mac80211/files/lib/wifi/mac80211.sh
+sed -i "s/ssid=.*/ssid=$狗鹏/g" ./package/network/config/wifi-scripts/files/lib/wifi/mac80211.sh
 #加入编译者信息
 sed -i "s/DISTRIB_DESCRIPTION='[^']*'/DISTRIB_DESCRIPTION='GouPeng Build'/g" package/base-files/files/etc/openwrt_release
 #TTYD自动登录
